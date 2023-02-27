@@ -38,7 +38,25 @@ def create_resume(doc: Dict = Body(...), client: Any = Depends(get_search_client
 @router.get("")
 def search_resumes(client: Any = Depends(get_search_client)):
     try:
-        resp = client.search(index=INDEX_RESUME)
+        resp = client.search(index=INDEX_RESUME, body={
+            "query": {
+                "match": {
+                    "enable": True
+                }
+            },
+            "_source": {
+                "includes": [
+                    "rid",
+                    "tid",
+                    "avator",
+                    "fullname",
+                    "email",
+                    "intro",
+                    "updated_at",
+                    "created_at",
+                ],
+            }
+        })
         data = resp['hits']['hits']
         data = list(map(lambda x: x["_source"], data))
         return res_success(data=data)

@@ -38,7 +38,27 @@ def create_job(doc: Dict = Body(...), client: Any = Depends(get_search_client)):
 @router.get("")
 def search_jobs(client: Any = Depends(get_search_client)):
     try:
-        resp = client.search(index=INDEX_JOB)
+        resp = client.search(index=INDEX_JOB, body={
+            "query": {
+                "match": {
+                    "enable": True
+                }
+            },
+            "_source": {
+                "includes": [
+                    "jid",
+                    "cid",
+                    "title",
+                    "region",
+                    "salary",
+                    "job_desc",
+                    "others",
+                    "views",
+                    "updated_at",
+                    "created_at",
+                ],
+            }
+        })
         data = resp['hits']['hits']
         data = list(map(lambda x: x["_source"], data))
         return res_success(data=data)
@@ -64,7 +84,7 @@ def find_job(jid: str, client: Any = Depends(get_search_client)):
         log.error("search_jobs: %s", str(e))
         raise ServerException(msg="no job found")
 
-    
+
 @router.put("/{jid}")
 def update_job(jid: str, doc: Dict = Body(...), client: Any = Depends(get_search_client)):
     try:
