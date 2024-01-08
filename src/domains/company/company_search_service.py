@@ -29,7 +29,7 @@ class CompanySearchService:
             self.client.index(
                 index=INDEX_JOB,
                 id=self.__index_id(doc),
-                body=doc, 
+                body=doc.dict(), 
                 refresh=ES_INDEX_REFRESH,
             )
             return doc
@@ -92,7 +92,7 @@ class CompanySearchService:
             self.client.update(
                 index=INDEX_JOB, 
                 id=self.__index_id(doc),
-                body={"doc": doc},
+                body={"doc": doc.dict()},
                 refresh=ES_INDEX_REFRESH,
             )
             return doc
