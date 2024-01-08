@@ -59,7 +59,7 @@ class ResumeSearchService:
                     },
                     "sort": [
                         {
-                            query.sort_by: query.sort_dirction
+                            query.sort_by.value: query.sort_dirction.value
                         }
                     ],
                     "search_after": [query.search_after],
