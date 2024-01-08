@@ -2,7 +2,7 @@ import time
 import json
 from typing import List, Dict, Any
 from fastapi import APIRouter, \
-    Depends, Path, Query, Body, Form, status
+    Query, Body
 from ...configs.elasticsearch import client as es_client
 from ...configs.conf import *
 from ...configs.constants import *
@@ -37,7 +37,7 @@ def search_jobs(
     size: int = Query(10, gt=0, le=100),
     sort_by: SortField = Query(SortField.UPDATED_AT),
     sort_dirction: SortDirection = Query(SortDirection.DESC),
-    search_after: int = Query(None, gt=0),
+    search_after: str = Query(None),
 ):
     query = c.SearchJobListVO(
         size=size,
@@ -47,25 +47,6 @@ def search_jobs(
     )
     result = _company_search_service.search(query)
     return res_success(data=result)
-
-
-# TODO: 透過 match service 查詢
-@router.get("/{jid}")
-def find_job(jid: str):
-    try:
-        resp = es_client.search(index=INDEX_JOB, body={
-            "query": {
-                "match": {
-                    "jid": jid
-                }
-            }
-        })
-        data = resp['hits']['hits']
-        data = list(map(lambda x: x["_source"], data))
-        return res_success(data=data)
-    except Exception as e:
-        log.error("search_jobs: %s", str(e))
-        raise ServerException(msg="no job found")
 
 
 @router.put("")

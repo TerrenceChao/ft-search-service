@@ -51,7 +51,7 @@ class ResumeSearchService:
         
         try:
             req_body = {
-                "size": query.size,
+                "size": query.size + 1,
                 "query": {
                     "match": {
                         "enable": True
@@ -75,7 +75,11 @@ class ResumeSearchService:
             )
             items = resp['hits']['hits']
             items = list(map(lambda x: x["_source"], items))
-            return t.ResumeListVO(sort_by=query.sort_by, items=items)
+            return t.ResumeListVO(
+                size=query.size, 
+                sort_by=query.sort_by, 
+                items=items
+            )
         
         except Exception as e:
             log.error("search_resumes, query: %s, req_body: %s, resp: %s, err: %s", 

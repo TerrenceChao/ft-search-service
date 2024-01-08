@@ -22,14 +22,16 @@ class ResumeListVO(BaseModel):
     items: Optional[List[BaseResumeVO]] = []
     next: Optional[str] = None
 
-    def __init__(self, sort_by: SortField, items: List[Dict] = []):
+    def __init__(self, size: int, sort_by: SortField, items: List[Dict] = []):
         super().__init__()
-        if len(items) == 0:
+        item_len = len(items)
+        if item_len == 0:
             return
         
-        last_one = items[-1]
-        if sort_by.value in last_one:
-            self.next = str(last_one[sort_by.value])
+        if item_len > size:
+            last_one = items[-1]
+            if sort_by.value in last_one:
+                self.next = str(last_one[sort_by.value])
         self.items = [BaseResumeVO(**item) for item in items]
 
 
@@ -37,7 +39,7 @@ class SearchResumeListVO(BaseModel):
     size: int
     sort_by: SortField = SortField.UPDATED_AT
     sort_dirction: SortDirection = SortDirection.DESC
-    search_after: Optional[int] = None
+    search_after: Optional[str] = None
 
 
 class SearchResumeDetailVO(teacher.Resume):

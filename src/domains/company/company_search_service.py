@@ -51,7 +51,7 @@ class CompanySearchService:
         
         try:
             req_body = {
-                "size": query.size,
+                "size": query.size + 1,
                 "query": {
                     "match": {
                         "enable": True
@@ -75,7 +75,11 @@ class CompanySearchService:
             )
             items = resp['hits']['hits']
             items = list(map(lambda x: x["_source"], items))
-            return c.JobListVO(sort_by=query.sort_by, items=items)
+            return c.JobListVO(
+                size=query.size, 
+                sort_by=query.sort_by, 
+                items=items
+            )
         
         except Exception as e:
             log.error("search_jobs, query: %s, req_body: %s, resp: %s, err: %s", 
