@@ -14,8 +14,8 @@ class SearchResumeDTO(BaseModel):
     views: Optional[int] = None
     updated_at: Optional[int] = None
     created_at: Optional[int] = None
-    published_in: Optional[str] = None  # must
-    url_path: Optional[str] = None  # must
+    published_in: Optional[str] = None # must
+    url_path: Optional[str] = None # must
 
 
 class SearchResumeListVO(BaseModel):
@@ -48,20 +48,12 @@ class SearchResumeDetailDTO(teacher.Resume):
     url_path: Optional[str] = None
     views: int = 0
 
+    # FIXME: it's not working when create & update resume
     def model(self):
-        return {
-            "rid": self.rid,
-            "tid": self.tid,
-            "avator": self.avator,
-            "fullname": self.fullname,
-            "intro": self.intro,
-            "tags": self.tags,
-            "views": self.views,
-            "updated_at": self.updated_at,
-            "created_at": self.created_at,
-            "published_in": self.published_in,  # must
-            "url_path": self.url_path,  # must
-        }
+        dictionary = self.dict()
+        keys = set(SearchResumeDetailDTO.include_fields())
+        dictionary = {key: value for key, value in dictionary.items() if key in keys}
+        return dictionary
 
     @staticmethod
     def include_fields():
@@ -75,6 +67,6 @@ class SearchResumeDetailDTO(teacher.Resume):
             "views",
             "updated_at",
             "created_at",
-            "published_in",  # must
-            "url_path",  # must
+            "published_in", # must
+            "url_path", # must
         ]

@@ -30,7 +30,7 @@ class ResumeSearchService:
             self.client.index(
                 index=INDEX_RESUME, 
                 id=self.__index_id(doc),
-                body=doc.dict(),
+                body=doc.dict(), # FIXME: body=doc.model(),
                 refresh=ES_INDEX_REFRESH,
             )
             return doc
@@ -105,7 +105,7 @@ class ResumeSearchService:
             self.client.update(
                 index=INDEX_RESUME, 
                 id=self.__index_id(doc),
-                body={"doc": doc.dict()},
+                body={"doc": doc.dict()}, # FIXME: body={"doc": doc.model()},
                 refresh=ES_INDEX_REFRESH,
             )
             return doc
@@ -152,3 +152,11 @@ class ResumeSearchService:
         except Exception as e:
             log.error("remove_resume, doc: %s, err: %s", doc, str(e))
             raise ServerException(msg="remove resume fail")
+
+    def delete_resume_index(self):
+        try:
+            self.client.indices.delete(index=INDEX_RESUME)
+        
+        except Exception as e:
+            log.error("delete_resume_index, err: %s", str(e))
+            raise ServerException(msg="delete_resume_index fail")

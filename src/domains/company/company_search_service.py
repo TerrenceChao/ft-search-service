@@ -30,7 +30,7 @@ class CompanySearchService:
             self.client.index(
                 index=INDEX_JOB,
                 id=self.__index_id(doc),
-                body=doc.dict(), 
+                body=doc.dict(), # FIXME: body=doc.model(),
                 refresh=ES_INDEX_REFRESH,
             )
             return doc
@@ -105,7 +105,7 @@ class CompanySearchService:
             self.client.update(
                 index=INDEX_JOB, 
                 id=self.__index_id(doc),
-                body={"doc": doc.dict()},
+                body={"doc": doc.dict()}, # FIXME: body={"doc": doc.model()},
                 refresh=ES_INDEX_REFRESH,
             )
             return doc
@@ -152,3 +152,12 @@ class CompanySearchService:
         except Exception as e:
             log.error("remove_job, doc: %s, err: %s", doc, str(e))
             raise ServerException(msg="remove job fail")
+
+
+    def delete_job_index(self):
+        try:
+            self.client.indices.delete(index=INDEX_JOB)
+        
+        except Exception as e:
+            log.error("delete_job_index, err: %s", str(e))
+            raise ServerException(msg="delete_job_index fail")

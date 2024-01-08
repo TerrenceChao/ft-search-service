@@ -7,9 +7,9 @@ from ...infra.db.nosql.companies import schemas as company
 class SearchJobDTO(BaseModel):
     jid: Optional[int] = None
     cid: Optional[int] = None
-    name: Optional[str] = None  # school/company/organization name
+    name: Optional[str] = None # school/company/organization name
     logo: Optional[str] = None
-    title:  Optional[str] = None  # job title
+    title:  Optional[str] = None # job title
     region: Optional[str] = None
     salary: Optional[str] = None
     job_desc: Optional[Dict] = None
@@ -18,8 +18,8 @@ class SearchJobDTO(BaseModel):
     views: Optional[int] = None
     updated_at: Optional[int] = None
     created_at: Optional[int] = None
-    published_in: Optional[str] = None  # must
-    url_path: Optional[str] = None  # must
+    published_in: Optional[str] = None # must
+    url_path: Optional[str] = None # must
 
 
 class SearchJobListVO(BaseModel):
@@ -50,33 +50,21 @@ class SearchJobDetailDTO(company.Job, company.CompanyProfile):
     url_path: Optional[str] = None
     views: int = 0
 
+    # FIXME: it's not working when create & update job
     def model(self):
-        return {
-            "jid": self.jid,
-            "cid": self.cid,
-            "name": self.name,  # school/company/organization name
-            "logo": self.logo,
-            "title": self.title,  # job title
-            "region": self.region,
-            "salary": self.salary,
-            "job_desc": self.job_desc,
-            "others": self.others,
-            "tags": self.tags,
-            "views": self.views,
-            "updated_at": self.updated_at,
-            "created_at": self.created_at,
-            "published_in": self.published_in,  # must
-            "url_path": self.url_path,  # must
-        }
+        dictionary = self.dict()
+        keys = set(SearchJobDetailDTO.include_fields())
+        dictionary = {key: value for key, value in dictionary.items() if key in keys}
+        return dictionary
 
     @staticmethod
     def include_fields():
         return [
             "jid",
             "cid",
-            "name",  # school/company/organization name
+            "name", # school/company/organization name
             "logo",
-            "title",  # job title
+            "title", # job title
             "region",
             "salary",
             "job_desc",
@@ -85,6 +73,6 @@ class SearchJobDetailDTO(company.Job, company.CompanyProfile):
             "views",
             "updated_at",
             "created_at",
-            "published_in",  # must
-            "url_path",  # must
+            "published_in", # must
+            "url_path", # must
         ]
