@@ -29,7 +29,7 @@ async def business_exception_handler(request: Request, exc: BusinessException):
 exceptions.include_app(app)
 
 
-router_v1 = APIRouter(prefix="/api/v1")
+router_v1 = APIRouter(prefix="/search/api/v1")
 router_v1.include_router(search_resumes.router)
 router_v1.include_router(search_jobs.router)
 

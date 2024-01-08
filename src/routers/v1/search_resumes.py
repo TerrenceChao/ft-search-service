@@ -20,7 +20,7 @@ _resume_search_service = ResumeSearchService(es_client)
 
 
 router = APIRouter(
-    prefix="/search/resumes",
+    prefix="/resumes",
     tags=["Search Resumes"],
     responses={404: {"description": "Not found"}},
 )

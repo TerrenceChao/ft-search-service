@@ -20,7 +20,7 @@ _company_search_service = CompanySearchService(es_client)
 
 
 router = APIRouter(
-    prefix="/search/jobs",
+    prefix="/jobs",
     tags=["Search Jobs"],
     responses={404: {"description": "Not found"}},
 )
