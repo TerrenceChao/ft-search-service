@@ -46,34 +46,40 @@ class CompanySearchService:
     考慮銜接 跨 es-cluster 的搜尋
     '''
     def search(self, query: c.SearchJobListVO):
+        req_body = None
         resp = None
+        
         try:
+            req_body = {
+                "size": query.size,
+                "query": {
+                    "match": {
+                        "enable": True
+                    }
+                },
+                "sort": [
+                    {
+                        query.sort_by.value: query.sort_dirction.value
+                    }
+                ],
+                "_source": {
+                    "includes": c.SearchJobDetailVO.include_fields(),
+                }
+            }
+            if query.search_after:
+                req_body["search_after"] = [query.search_after]
+            
             resp = self.client.search(
                 index=INDEX_JOB, 
-                body={
-                    "size": query.size,
-                    "query": {
-                        "match": {
-                            "enable": True
-                        }
-                    },
-                    "sort": [
-                        {
-                            query.sort_by.value: query.sort_dirction.value
-                        }
-                    ],
-                    "search_after": [query.search_after],
-                    "_source": {
-                        "includes": c.SearchJobDetailVO.include_fields(),
-                    }
-                }
+                body=req_body,
             )
             items = resp['hits']['hits']
             items = list(map(lambda x: x["_source"], items))
             return c.JobListVO(sort_by=query.sort_by, items=items)
         
         except Exception as e:
-            log.error("search_jobs, query: %s, resp: %s, err: %s", query, resp, str(e))
+            log.error("search_jobs, query: %s, req_body: %s, resp: %s, err: %s", 
+                      query, req_body, resp, str(e))
             raise ServerException(msg="no job found")
     
 
