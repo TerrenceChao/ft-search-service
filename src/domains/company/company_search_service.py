@@ -52,8 +52,9 @@ class CompanySearchService:
         resp = None
         
         try:
+            query.size += 1
             req_body = {
-                "size": query.size + 1,
+                "size": query.size,
                 "query": {
                     "match": {
                         "enable": True

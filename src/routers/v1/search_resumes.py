@@ -26,7 +26,7 @@ router = APIRouter(
 )
 
 
-@router.post("")
+@router.post("", status_code=201)
 def create_resume(doc: t.SearchResumeDetailDTO = Body(...)):
     data = _resume_search_service.create(doc)
     return res_success(data=data)
@@ -65,3 +65,12 @@ def enable_resume(doc: t.SearchResumeDetailDTO = Body(...)):
 def remove_resume(doc: t.SearchResumeDetailDTO = Body(...)):
     data = _resume_search_service.remove(doc)
     return res_success(data=data)
+
+
+@router.delete("/delete-forever")
+def delete_forever(confirm: str = Query(...)):
+    if confirm != "im-sure":
+        raise ClientException(msg="wrong phrase")
+    
+    _resume_search_service.delete_resume_index()
+    return res_success()

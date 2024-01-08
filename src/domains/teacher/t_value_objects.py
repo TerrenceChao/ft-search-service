@@ -28,7 +28,7 @@ class SearchResumeListVO(BaseModel):
         if item_len == 0:
             return
         
-        if item_len > size:
+        if item_len >= size:
             last_one = items[-1]
             if sort_by.value in last_one:
                 self.next = str(last_one[sort_by.value])
