@@ -3,7 +3,7 @@ from mangum import Mangum
 from fastapi import FastAPI, Request, APIRouter
 from fastapi.responses import JSONResponse
 from src.routers.v1 import search_resumes, search_jobs
-from src.exceptions import search_except
+from src.configs import exceptions
 
 
 STAGE = os.environ.get('STAGE')
@@ -26,7 +26,7 @@ async def business_exception_handler(request: Request, exc: BusinessException):
     )
 
 
-search_except.include_app(app)
+exceptions.include_app(app)
 
 
 router_v1 = APIRouter(prefix="/api/v1")
