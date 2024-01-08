@@ -4,7 +4,7 @@ from ...configs.constants import *
 from ...infra.db.nosql.companies import schemas as company
 
 
-class BaseJobVO(BaseModel):
+class SearchJobDTO(BaseModel):
     jid: Optional[int] = None
     cid: Optional[int] = None
     name: Optional[str] = None  # school/company/organization name
@@ -22,8 +22,8 @@ class BaseJobVO(BaseModel):
     url_path: Optional[str] = None  # must
 
 
-class JobListVO(BaseModel):
-    items: Optional[List[BaseJobVO]] = []
+class SearchJobListVO(BaseModel):
+    items: Optional[List[SearchJobDTO]] = []
     next: Optional[str] = None
 
     def __init__(self, size: int, sort_by: SortField, items: List[Dict] = []):
@@ -36,17 +36,17 @@ class JobListVO(BaseModel):
             last_one = items[-1]
             if sort_by.value in last_one:
                 self.next = str(last_one[sort_by.value])
-        self.items = [BaseJobVO(**item) for item in items]
+        self.items = [SearchJobDTO(**item) for item in items]
 
 
-class SearchJobListVO(BaseModel):
+class SearchJobListQueryDTO(BaseModel):
     size: int
     sort_by: SortField = SortField.UPDATED_AT
     sort_dirction: SortDirection = SortDirection.DESC
     search_after: Optional[str] = None
 
 
-class SearchJobDetailVO(company.Job, company.CompanyProfile):
+class SearchJobDetailDTO(company.Job, company.CompanyProfile):
     url_path: Optional[str] = None
     views: int = 0
 

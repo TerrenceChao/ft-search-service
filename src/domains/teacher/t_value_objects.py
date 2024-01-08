@@ -4,7 +4,7 @@ from ...configs.constants import *
 from ...infra.db.nosql.teachers import schemas as teacher
 
 
-class BaseResumeVO(BaseModel):
+class SearchResumeDTO(BaseModel):
     rid: Optional[int] = None
     tid: Optional[int] = None
     avator: Optional[str] = None
@@ -18,8 +18,8 @@ class BaseResumeVO(BaseModel):
     url_path: Optional[str] = None  # must
 
 
-class ResumeListVO(BaseModel):
-    items: Optional[List[BaseResumeVO]] = []
+class SearchResumeListVO(BaseModel):
+    items: Optional[List[SearchResumeDTO]] = []
     next: Optional[str] = None
 
     def __init__(self, size: int, sort_by: SortField, items: List[Dict] = []):
@@ -32,17 +32,17 @@ class ResumeListVO(BaseModel):
             last_one = items[-1]
             if sort_by.value in last_one:
                 self.next = str(last_one[sort_by.value])
-        self.items = [BaseResumeVO(**item) for item in items]
+        self.items = [SearchResumeDTO(**item) for item in items]
 
 
-class SearchResumeListVO(BaseModel):
+class SearchResumeListQueryDTO(BaseModel):
     size: int
     sort_by: SortField = SortField.UPDATED_AT
     sort_dirction: SortDirection = SortDirection.DESC
     search_after: Optional[str] = None
 
 
-class SearchResumeDetailVO(teacher.Resume):
+class SearchResumeDetailDTO(teacher.Resume):
     fullname: Optional[str] = None
     avator: Optional[str] = None
     url_path: Optional[str] = None

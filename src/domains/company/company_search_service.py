@@ -16,15 +16,16 @@ class CompanySearchService:
         # and cache the mapping
         # 或是其他在 app 啟動時就會讀取資料的時機緩存 local 就好
         
-    def __index_id(self, doc: c.SearchJobDetailVO):
+    def __index_id(self, doc: c.SearchJobDetailDTO):
         return f'{doc.published_in}-{doc.jid}'
 
     '''
+    TODO:
     - read mapping from cache (or local cache)
     - get es-cluster-1 by [month of doc.updated_at]
     - create index in es-cluster-1 with jid
     '''
-    def create(self, doc: c.SearchJobDetailVO):
+    def create(self, doc: c.SearchJobDetailDTO):
         try:
             self.client.index(
                 index=INDEX_JOB,
@@ -40,12 +41,13 @@ class CompanySearchService:
 
 
     '''
+    TODO:
     - read mapping from cache (or local cache)
     - get es-cluster-1 by [month of doc.updated_at]
     
     考慮銜接 跨 es-cluster 的搜尋
     '''
-    def search(self, query: c.SearchJobListVO):
+    def search(self, query: c.SearchJobListQueryDTO):
         req_body = None
         resp = None
         
@@ -63,7 +65,7 @@ class CompanySearchService:
                     }
                 ],
                 "_source": {
-                    "includes": c.SearchJobDetailVO.include_fields(),
+                    "includes": c.SearchJobDetailDTO.include_fields(),
                 }
             }
             if query.search_after:
@@ -75,7 +77,7 @@ class CompanySearchService:
             )
             items = resp['hits']['hits']
             items = list(map(lambda x: x["_source"], items))
-            return c.JobListVO(
+            return c.SearchJobListVO(
                 size=query.size, 
                 sort_by=query.sort_by, 
                 items=items
@@ -85,9 +87,10 @@ class CompanySearchService:
             log.error("search_jobs, query: %s, req_body: %s, resp: %s, err: %s", 
                       query, req_body, resp, str(e))
             raise ServerException(msg="no job found")
-    
+
 
     '''
+    TODO:
     - read mapping from cache (or local cache)
     - get es-cluster-1 by [month of doc.last_updated_at]
     - if [month of doc.last_updated_at] == [month of doc.updated_at]
@@ -97,7 +100,7 @@ class CompanySearchService:
         create index by [month of doc.updated_at] in es-cluster-2 with jid
         delete index in [month of doc.last_updated_at] es-cluster-1 with jid
     '''
-    def update(self, doc: c.SearchJobDetailVO):
+    def update(self, doc: c.SearchJobDetailDTO):
         try:
             self.client.update(
                 index=INDEX_JOB, 
@@ -112,7 +115,7 @@ class CompanySearchService:
             raise ServerException(msg="update job fail")
         
         
-    def enable(self, doc: c.SearchJobDetailVO):
+    def enable(self, doc: c.SearchJobDetailDTO):
         try:
             self.client.update(
                 index=INDEX_JOB, 
@@ -132,11 +135,12 @@ class CompanySearchService:
 
 
     '''
+    TODO:
     - read mapping from cache (or local cache)
     - get es-cluster-1 by [month of doc.updated_at]
     - delete index in es-cluster-1 with jid
     '''
-    def remove(self, doc: c.SearchJobDetailVO):
+    def remove(self, doc: c.SearchJobDetailDTO):
         try:
             self.client.delete(
                 index=INDEX_JOB, 

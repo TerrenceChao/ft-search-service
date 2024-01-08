@@ -27,7 +27,7 @@ router = APIRouter(
 
 
 @router.post("")
-def create_job(doc: c.SearchJobDetailVO = Body(...)):
+def create_job(doc: c.SearchJobDetailDTO = Body(...)):
     data = _company_search_service.create(doc)
     return res_success(data=data)
 
@@ -39,7 +39,7 @@ def search_jobs(
     sort_dirction: SortDirection = Query(SortDirection.DESC),
     search_after: str = Query(None),
 ):
-    query = c.SearchJobListVO(
+    query = c.SearchJobListQueryDTO(
         size=size,
         sort_by=sort_by,
         sort_dirction=sort_dirction,
@@ -50,18 +50,18 @@ def search_jobs(
 
 
 @router.put("")
-def update_job(doc: c.SearchJobDetailVO = Body(...)):
+def update_job(doc: c.SearchJobDetailDTO = Body(...)):
     data = _company_search_service.update(doc)
     return res_success(data=data)
 
 
 @router.put("/enable")
-def enable_job(doc: c.SearchJobDetailVO = Body(...)):
+def enable_job(doc: c.SearchJobDetailDTO = Body(...)):
     data = _company_search_service.enable(doc)
     return res_success(data=data)
 
 
 @router.put("/remove")
-def remove_job(doc: c.SearchJobDetailVO = Body(...)):
+def remove_job(doc: c.SearchJobDetailDTO = Body(...)):
     data = _company_search_service.remove(doc)
     return res_success(data=data)

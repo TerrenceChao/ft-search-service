@@ -27,7 +27,7 @@ router = APIRouter(
 
 
 @router.post("")
-def create_resume(doc: t.SearchResumeDetailVO = Body(...)):
+def create_resume(doc: t.SearchResumeDetailDTO = Body(...)):
     data = _resume_search_service.create(doc)
     return res_success(data=data)
 
@@ -39,7 +39,7 @@ def search_resumes(
     sort_dirction: SortDirection = Query(SortDirection.DESC),
     search_after: str = Query(None),
 ):
-    query = t.SearchResumeListVO(
+    query = t.SearchResumeListQueryDTO(
         size=size,
         sort_by=sort_by,
         sort_dirction=sort_dirction,
@@ -50,18 +50,18 @@ def search_resumes(
 
 
 @router.put("")
-def update_resume(doc: t.SearchResumeDetailVO = Body(...)):
+def update_resume(doc: t.SearchResumeDetailDTO = Body(...)):
     data = _resume_search_service.update(doc)
     return res_success(data=data)
 
 
 @router.put("/enable")
-def enable_resume(doc: t.SearchResumeDetailVO = Body(...)):
+def enable_resume(doc: t.SearchResumeDetailDTO = Body(...)):
     data = _resume_search_service.enable(doc)
     return res_success(data=data)
 
 
 @router.put("/remove")
-def remove_resume(doc: t.SearchResumeDetailVO = Body(...)):
+def remove_resume(doc: t.SearchResumeDetailDTO = Body(...)):
     data = _resume_search_service.remove(doc)
     return res_success(data=data)

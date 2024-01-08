@@ -16,15 +16,16 @@ class ResumeSearchService:
         # and cache the mapping
         # 或是其他在 app 啟動時就會讀取資料的時機緩存 local 就好
 
-    def __index_id(self, doc: t.SearchResumeDetailVO):
+    def __index_id(self, doc: t.SearchResumeDetailDTO):
         return f'{doc.published_in}-{doc.rid}'
 
     '''
+    TODO:
     - read mapping from cache (or local cache)
     - get es-cluster-1 by [month of doc.updated_at]
     - create index in es-cluster-1 with rid
     '''
-    def create(self, doc: t.SearchResumeDetailVO):
+    def create(self, doc: t.SearchResumeDetailDTO):
         try:
             self.client.index(
                 index=INDEX_RESUME, 
@@ -40,12 +41,13 @@ class ResumeSearchService:
         
 
     '''
+    TODO:
     - read mapping from cache (or local cache)
     - get es-cluster-1 by [month of doc.updated_at]
     
     考慮銜接 跨 es-cluster 的搜尋
     '''
-    def search(self, query: t.SearchResumeListVO):
+    def search(self, query: t.SearchResumeListQueryDTO):
         req_body = None
         resp = None
         
@@ -63,7 +65,7 @@ class ResumeSearchService:
                     }
                 ],
                 "_source": {
-                    "includes": t.SearchResumeDetailVO.include_fields(),
+                    "includes": t.SearchResumeDetailDTO.include_fields(),
                 }
             }
             if query.search_after:
@@ -75,7 +77,7 @@ class ResumeSearchService:
             )
             items = resp['hits']['hits']
             items = list(map(lambda x: x["_source"], items))
-            return t.ResumeListVO(
+            return t.SearchResumeListVO(
                 size=query.size, 
                 sort_by=query.sort_by, 
                 items=items
@@ -88,6 +90,7 @@ class ResumeSearchService:
 
 
     '''
+    TODO:
     - read mapping from cache (or local cache)
     - get es-cluster-1 by [month of doc.last_updated_at]
     - if [month of doc.last_updated_at] == [month of doc.updated_at]
@@ -97,7 +100,7 @@ class ResumeSearchService:
         create index [month of doc.updated_at] in es-cluster-2 with rid
         delete index [month of doc.last_updated_at] in es-cluster-1 with rid
     '''
-    def update(self, doc: t.SearchResumeDetailVO):
+    def update(self, doc: t.SearchResumeDetailDTO):
         try:
             self.client.update(
                 index=INDEX_RESUME, 
@@ -112,7 +115,7 @@ class ResumeSearchService:
             raise ServerException(msg="update resume fail")
         
         
-    def enable(self, doc: t.SearchResumeDetailVO):
+    def enable(self, doc: t.SearchResumeDetailDTO):
         try:
             self.client.update(
                 index=INDEX_RESUME, 
@@ -132,11 +135,12 @@ class ResumeSearchService:
 
 
     '''
+    TODO:
     - read mapping from cache (or local cache)
     - get es-cluster-1 by [month of doc.updated_at]
     - delete index in es-cluster-1 with rid
     '''
-    def remove(self, doc: t.SearchResumeDetailVO):
+    def remove(self, doc: t.SearchResumeDetailDTO):
         try:
             self.client.delete(
                 index=INDEX_RESUME, 
