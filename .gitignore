@@ -21,3 +21,4 @@ venv
 
 # Serverless directories
 .serverless
+*.sh
