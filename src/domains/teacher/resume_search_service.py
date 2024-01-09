@@ -52,7 +52,6 @@ class ResumeSearchService:
         resp = None
         
         try:
-            query.size += 1
             req_body = {
                 "size": query.size,
                 "query": {
