@@ -56,18 +56,20 @@ class CompanySearchService:
             req_body = {
                 "size": query.size,
                 "query": {
-                    "match": {
-                        "enable": True
-                    }
+                    "term": {
+                        "enable": {
+                            "value": True,
+                        },
+                    },
                 },
                 "sort": [
                     {
-                        query.sort_by.value: query.sort_dirction.value
-                    }
+                        query.sort_by.value: query.sort_dirction.value,
+                    },
                 ],
                 "_source": {
                     "includes": c.SearchJobDetailDTO.include_fields(),
-                }
+                },
             }
             if query.search_after:
                 req_body["search_after"] = [query.search_after]

@@ -16,6 +16,7 @@ class SearchResumeDTO(BaseModel):
     created_at: Optional[int] = None
     region: Optional[str] = None # must
     url_path: Optional[str] = None # must
+    enable: Optional[bool] = None
 
 
 class SearchResumeListVO(BaseModel):
@@ -69,4 +70,5 @@ class SearchResumeDetailDTO(teacher.Resume):
             "created_at",
             "region", # must
             "url_path", # must
+            "enable",
         ]
