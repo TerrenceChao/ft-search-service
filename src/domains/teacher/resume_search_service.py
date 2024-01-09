@@ -17,7 +17,7 @@ class ResumeSearchService:
         # 或是其他在 app 啟動時就會讀取資料的時機緩存 local 就好
 
     def __index_id(self, doc: t.SearchResumeDetailDTO):
-        return f'{doc.published_in}-{doc.rid}'
+        return f'{doc.region}-{doc.rid}'
 
     '''
     TODO:

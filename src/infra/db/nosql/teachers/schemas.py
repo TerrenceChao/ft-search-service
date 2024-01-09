@@ -20,4 +20,4 @@ class Resume(BaseEntity):
     enable: Optional[bool] = True
     last_updated_at: Optional[int] = None
     # it's optional in gateway
-    published_in: Optional[str] = None
+    region: Optional[str] = None
