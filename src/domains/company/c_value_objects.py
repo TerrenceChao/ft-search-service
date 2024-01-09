@@ -20,6 +20,7 @@ class SearchJobDTO(BaseModel):
     created_at: Optional[int] = None
     region: Optional[str] = None # must
     url_path: Optional[str] = None # must
+    enable: Optional[bool] = None
 
 
 class SearchJobListVO(BaseModel):
@@ -75,4 +76,5 @@ class SearchJobDetailDTO(company.Job, company.CompanyProfile):
             "created_at",
             "region", # must
             "url_path", # must
+            "enable",
         ]
