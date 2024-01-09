@@ -10,7 +10,7 @@ class SearchJobDTO(BaseModel):
     name: Optional[str] = None # school/company/organization name
     logo: Optional[str] = None
     title:  Optional[str] = None # job title
-    region: Optional[str] = None
+    location: Optional[str] = None
     salary: Optional[str] = None
     job_desc: Optional[Dict] = None
     others: Optional[Dict] = None
@@ -18,7 +18,7 @@ class SearchJobDTO(BaseModel):
     views: Optional[int] = None
     updated_at: Optional[int] = None
     created_at: Optional[int] = None
-    published_in: Optional[str] = None # must
+    region: Optional[str] = None # must
     url_path: Optional[str] = None # must
 
 
@@ -65,7 +65,7 @@ class SearchJobDetailDTO(company.Job, company.CompanyProfile):
             "name", # school/company/organization name
             "logo",
             "title", # job title
-            "region",
+            "location",
             "salary",
             "job_desc",
             "others",
@@ -73,6 +73,6 @@ class SearchJobDetailDTO(company.Job, company.CompanyProfile):
             "views",
             "updated_at",
             "created_at",
-            "published_in", # must
+            "region", # must
             "url_path", # must
         ]

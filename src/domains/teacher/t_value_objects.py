@@ -14,7 +14,7 @@ class SearchResumeDTO(BaseModel):
     views: Optional[int] = None
     updated_at: Optional[int] = None
     created_at: Optional[int] = None
-    published_in: Optional[str] = None # must
+    region: Optional[str] = None # must
     url_path: Optional[str] = None # must
 
 
@@ -67,6 +67,6 @@ class SearchResumeDetailDTO(teacher.Resume):
             "views",
             "updated_at",
             "created_at",
-            "published_in", # must
+            "region", # must
             "url_path", # must
         ]

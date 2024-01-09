@@ -6,7 +6,7 @@ class Job(BaseEntity):
     jid: Optional[int] = None
     cid: int
     title: Optional[str] = None
-    region: Optional[str] = None
+    location: Optional[str] = None
     salary: Optional[str] = None
     job_desc: Optional[Dict] = None
     # extra data, photos
@@ -15,7 +15,7 @@ class Job(BaseEntity):
     enable: Optional[bool] = True
     last_updated_at: Optional[int] = None
     # it's optional in gateway
-    published_in: Optional[str] = None
+    region: Optional[str] = None
 
 
 class CompanyProfile(BaseEntity):
