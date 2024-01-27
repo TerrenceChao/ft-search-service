@@ -71,6 +71,6 @@ def remove_job(doc: c.SearchJobDetailDTO = Body(...)):
 def delete_forever(confirm: str = Query(...)):
     if confirm != "im-sure":
         raise ClientException(msg="wrong phrase")
-    
+
     _job_search_service.delete_job_index()
     return res_success()

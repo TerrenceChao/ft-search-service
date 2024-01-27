@@ -129,7 +129,8 @@ class SearchResumeDetailDTO(teacher.Resume):
         return value is not None
 
     def gen_extra_tags(self, resume_sections: List[Dict]) -> (Dict):
-        extra_tags = {f'{field}_tags': set() for field in RESUME_TRANSFORM_FIELDS}
+        extra_tags = \
+            {f'{field}_tags': set() for field in RESUME_TRANSFORM_FIELDS}
 
         for section in resume_sections:
             for field in RESUME_TRANSFORM_FIELDS:
