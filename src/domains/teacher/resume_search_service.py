@@ -28,10 +28,11 @@ class ResumeSearchService:
 
     def create(self, doc: t.SearchResumeDetailDTO):
         try:
+            doc_dict = doc.dict_for_create()
             self.client.index(
                 index=INDEX_RESUME,
                 id=self.__index_id(doc),
-                body=doc.dict_for_create(),  # FIXME: body=doc.model(),
+                body=doc_dict,  # FIXME: body=doc.model(),
                 refresh=ES_INDEX_REFRESH,
             )
             return doc
@@ -105,11 +106,12 @@ class ResumeSearchService:
 
     def update(self, doc: t.SearchResumeDetailDTO):
         try:
+            doc_dict = doc.dict_for_update()
             self.client.update(
                 index=INDEX_RESUME,
                 id=self.__index_id(doc),
                 # FIXME: body={"doc": doc.model()},
-                body={"doc": doc.dict_for_update()},
+                body={"doc": doc_dict},
                 refresh=ES_INDEX_REFRESH,
             )
             return doc

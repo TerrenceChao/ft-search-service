@@ -27,8 +27,8 @@ class JobSearchService:
     '''
 
     def create(self, doc: c.SearchJobDetailDTO):
-        doc_dict = doc.dict_for_create()
         try:
+            doc_dict = doc.dict_for_create()
             self.client.index(
                 index=INDEX_JOB,
                 id=self.__index_id(doc),
@@ -105,8 +105,8 @@ class JobSearchService:
     '''
 
     def update(self, doc: c.SearchJobDetailDTO):
-        doc_dict = doc.dict_for_update()
         try:
+            doc_dict = doc.dict_for_update()
             self.client.update(
                 index=INDEX_JOB,
                 id=self.__index_id(doc),
