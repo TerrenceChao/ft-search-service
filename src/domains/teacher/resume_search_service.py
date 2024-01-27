@@ -30,11 +30,11 @@ class ResumeSearchService:
             self.client.index(
                 index=INDEX_RESUME, 
                 id=self.__index_id(doc),
-                body=doc.dict(), # FIXME: body=doc.model(),
+                body=doc.dict_for_create(), # FIXME: body=doc.model(),
                 refresh=ES_INDEX_REFRESH,
             )
             return doc
-        
+
         except Exception as e:
             log.error("create_resume, doc: %s, err: %s", doc, str(e))
             raise ServerException(msg="create resume fail")
@@ -105,9 +105,9 @@ class ResumeSearchService:
     def update(self, doc: t.SearchResumeDetailDTO):
         try:
             self.client.update(
-                index=INDEX_RESUME, 
+                index=INDEX_RESUME,
                 id=self.__index_id(doc),
-                body={"doc": doc.dict()}, # FIXME: body={"doc": doc.model()},
+                body={"doc": doc.dict_for_update()}, # FIXME: body={"doc": doc.model()},
                 refresh=ES_INDEX_REFRESH,
             )
             return doc
