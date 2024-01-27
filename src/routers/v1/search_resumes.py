@@ -71,6 +71,6 @@ def remove_resume(doc: t.SearchResumeDetailDTO = Body(...)):
 def delete_forever(confirm: str = Query(...)):
     if confirm != "im-sure":
         raise ClientException(msg="wrong phrase")
-    
+
     _resume_search_service.delete_resume_index()
     return res_success()

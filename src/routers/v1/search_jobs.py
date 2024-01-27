@@ -8,7 +8,7 @@ from ...configs.conf import *
 from ...configs.constants import *
 from ...configs.exceptions import *
 from ...domains.company import c_value_objects as c
-from ...domains.company.company_search_service import CompanySearchService
+from ...domains.company.job_search_service import JobSearchService
 from ..res.response import res_success, res_err
 import logging as log
 
@@ -16,7 +16,7 @@ import logging as log
 log.basicConfig(filemode='w', level=log.INFO)
 
 
-_company_search_service = CompanySearchService(es_client)
+_job_search_service = JobSearchService(es_client)
 
 
 router = APIRouter(
@@ -28,7 +28,7 @@ router = APIRouter(
 
 @router.post("", status_code=201)
 def create_job(doc: c.SearchJobDetailDTO = Body(...)):
-    data = _company_search_service.create(doc)
+    data = _job_search_service.create(doc)
     return res_success(data=data)
 
 
@@ -45,25 +45,25 @@ def search_jobs(
         sort_dirction=sort_dirction,
         search_after=search_after,
     )
-    result = _company_search_service.search(query)
+    result = _job_search_service.search(query)
     return res_success(data=result)
 
 
 @router.put("")
 def update_job(doc: c.SearchJobDetailDTO = Body(...)):
-    data = _company_search_service.update(doc)
+    data = _job_search_service.update(doc)
     return res_success(data=data)
 
 
 @router.put("/enable")
 def enable_job(doc: c.SearchJobDetailDTO = Body(...)):
-    data = _company_search_service.enable(doc)
+    data = _job_search_service.enable(doc)
     return res_success(data=data)
 
 
 @router.put("/remove")
 def remove_job(doc: c.SearchJobDetailDTO = Body(...)):
-    data = _company_search_service.remove(doc)
+    data = _job_search_service.remove(doc)
     return res_success(data=data)
 
 
@@ -71,6 +71,6 @@ def remove_job(doc: c.SearchJobDetailDTO = Body(...)):
 def delete_forever(confirm: str = Query(...)):
     if confirm != "im-sure":
         raise ClientException(msg="wrong phrase")
-    
-    _company_search_service.delete_job_index()
+
+    _job_search_service.delete_job_index()
     return res_success()
