@@ -132,7 +132,7 @@ class SearchJobDetailDTO(company.Job, company.CompanyProfile):
         extra_tags = set()
         for field in JOB_TRANSFORM_FIELDS:
             if field in profile_job_dict:
-                value = profile_job_dict[field]
+                value = profile_job_dict.pop(field, None)
                 if isinstance(value, dict):
                     extra_tags = \
                         self.find_deep_strings(value, 0, extra_tags)

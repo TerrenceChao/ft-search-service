@@ -24,7 +24,7 @@ ES_INDEX_REFRESH = bool(ES_INDEX_REFRESH)
 
 # job
 # do some mapping in es
-MAX_JOB_DICT_DEPTH = int(os.getenv("MAX_JOB_DICT_DEPTH", "3"))
+MAX_JOB_DICT_DEPTH = int(os.getenv("MAX_JOB_DICT_DEPTH", "2"))
 JOB_EXCLUDED_FIELDS = os.getenv("JOB_EXCLUDED_FIELDS", None)
 JOB_TRANSFORM_FIELDS = os.getenv("JOB_TRANSFORM_FIELDS", None)
 
@@ -34,6 +34,8 @@ RESUME_TRANSFORM_FIELDS = os.getenv("RESUME_TRANSFORM_FIELDS", None)
 
 if JOB_EXCLUDED_FIELDS is None:
     JOB_EXCLUDED_FIELDS = {
+        'sections',
+        'photos',
     }
 else:
     JOB_EXCLUDED_FIELDS = \
