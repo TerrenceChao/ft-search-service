@@ -141,7 +141,7 @@ class SearchJobDetailDTO(company.Job, company.CompanyProfile):
 
     def find_deep_strings(self, data: Dict, current_depth: int = 0, found_strings: Set = None):
         if found_strings is None:
-            found_strings = []
+            found_strings = set()
 
         if current_depth >= MAX_JOB_DICT_DEPTH:
             return found_strings

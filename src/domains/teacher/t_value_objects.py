@@ -136,6 +136,9 @@ class SearchResumeDetailDTO(teacher.Resume):
             for field in RESUME_TRANSFORM_FIELDS:
                 if section.get(field) is not None:
                     extra_tags[f'{field}_tags'].add(section[field])
-                extra_tags[f'{field}_tags'] = list(extra_tags[f'{field}_tags'])
+
+        for field in RESUME_TRANSFORM_FIELDS:
+            tag_key = f'{field}_tags'
+            extra_tags[tag_key] = list(extra_tags[tag_key])
 
         return extra_tags
