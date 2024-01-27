@@ -85,10 +85,11 @@ class SearchResumeDetailDTO(teacher.Resume):
         # besides 'sections', cuz the nested field 'sections' is not supported by elasticsearch
         sections = profile_resume_dict.pop('sections', [])
         log.warn('[create] sections: %s', sections)
+
+        profile_resume_dict.update(self.gen_extra_tags(sections))
         for field in RESUME_EXCLUDED_FIELDS:
             profile_resume_dict.pop(field, None)
 
-        profile_resume_dict.update(self.gen_extra_tags(sections))
         log.warn('[create] profile_resume_dict: %s', profile_resume_dict)
         return profile_resume_dict
 
@@ -101,12 +102,14 @@ class SearchResumeDetailDTO(teacher.Resume):
         # the nested field 'sections' is not supported by elasticsearch
         sections = profile_resume_dict.pop('sections', [])
         log.warn('[update] sections: %s', sections)
+
+        profile_resume_dict.update(self.gen_extra_tags(sections))
         for field in RESUME_EXCLUDED_FIELDS:
             profile_resume_dict.pop(field, None)
 
-        profile_resume_dict.update(self.gen_extra_tags(sections))
         log.warn('[update] step 1: profile_resume_dict: %s',
                  profile_resume_dict)
+
         new_profile_resume_dict = {}
         for field, value in profile_resume_dict.items():
             if self.valid(value):

@@ -87,10 +87,10 @@ class SearchJobDetailDTO(company.Job, company.CompanyProfile):
 
     def dict_for_create(self):
         profile_job_dict = self.dict()
+        profile_job_dict.update(self.gen_extra_tags(profile_job_dict))
         for field in JOB_EXCLUDED_FIELDS:
             profile_job_dict.pop(field, None)
 
-        profile_job_dict.update(self.gen_extra_tags(profile_job_dict))
         log.warn('[create] profile_job_dict: %s', profile_job_dict)
         return profile_job_dict
 
@@ -100,10 +100,10 @@ class SearchJobDetailDTO(company.Job, company.CompanyProfile):
 
     def dict_for_update(self):
         profile_job_dict = self.dict()
+        profile_job_dict.update(self.gen_extra_tags(profile_job_dict))
         for field in JOB_EXCLUDED_FIELDS:
             profile_job_dict.pop(field, None)
 
-        profile_job_dict.update(self.gen_extra_tags(profile_job_dict))
         log.warn('[update] step 1: profile_job_dict: %s', profile_job_dict)
 
         new_profile_job_dict = {}
