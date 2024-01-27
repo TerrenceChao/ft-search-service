@@ -1,5 +1,5 @@
 from typing import List, Any, Dict
-from ...domains.company import c_value_objects as c
+from . import c_value_objects as c
 from ...configs.conf import INDEX_JOB, ES_INDEX_REFRESH
 from ...configs.exceptions import *
 from ...infra.utils.time_util import *
@@ -8,7 +8,7 @@ import logging as log
 log.basicConfig(filemode='w', level=log.INFO)
 
 
-class CompanySearchService:
+class JobSearchService:
     
     def __init__(self, client: Any):
         self.client = client
@@ -26,11 +26,12 @@ class CompanySearchService:
     - create index in es-cluster-1 with jid
     '''
     def create(self, doc: c.SearchJobDetailDTO):
+        doc_dict = doc.dict_for_create()
         try:
             self.client.index(
                 index=INDEX_JOB,
                 id=self.__index_id(doc),
-                body=doc.dict(), # FIXME: body=doc.model(),
+                body=doc_dict, # FIXME: body=doc.model(),
                 refresh=ES_INDEX_REFRESH,
             )
             return doc
@@ -103,11 +104,12 @@ class CompanySearchService:
         delete index in [month of doc.last_updated_at] es-cluster-1 with jid
     '''
     def update(self, doc: c.SearchJobDetailDTO):
+        doc_dict = doc.dict_for_update()
         try:
             self.client.update(
                 index=INDEX_JOB, 
                 id=self.__index_id(doc),
-                body={"doc": doc.dict()}, # FIXME: body={"doc": doc.model()},
+                body={"doc": doc_dict}, # FIXME: body={"doc": doc.model()},
                 refresh=ES_INDEX_REFRESH,
             )
             return doc

@@ -1,5 +1,5 @@
 from typing import List, Any, Dict
-from ...domains.teacher import t_value_objects as t
+from . import t_value_objects as t
 from ...configs.conf import INDEX_RESUME, ES_INDEX_REFRESH
 from ...configs.exceptions import *
 from ...infra.utils.time_util import *
