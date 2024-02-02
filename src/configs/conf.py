@@ -54,7 +54,6 @@ else:
 
 if RESUME_EXCLUDED_FIELDS is None:
     RESUME_EXCLUDED_FIELDS = {
-        'avator',
     }
 else:
     RESUME_EXCLUDED_FIELDS = \
