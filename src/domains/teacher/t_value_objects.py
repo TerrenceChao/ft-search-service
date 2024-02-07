@@ -44,6 +44,7 @@ class SearchResumeListQueryDTO(BaseModel):
     sort_by: SortField = SortField.UPDATED_AT
     sort_dirction: SortDirection = SortDirection.DESC
     search_after: Optional[str] = None
+    patterns: Optional[List[str]] = []
 
 
 class SearchResumeDetailDTO(teacher.Resume):

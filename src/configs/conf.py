@@ -27,10 +27,12 @@ ES_INDEX_REFRESH = bool(ES_INDEX_REFRESH)
 MAX_JOB_DICT_DEPTH = int(os.getenv("MAX_JOB_DICT_DEPTH", "2"))
 JOB_EXCLUDED_FIELDS = os.getenv("JOB_EXCLUDED_FIELDS", None)
 JOB_TRANSFORM_FIELDS = os.getenv("JOB_TRANSFORM_FIELDS", None)
+JOB_SEARCH_FIELDS = os.getenv("JOB_SEARCH_FIELDS", None)
 
 # resume
 RESUME_EXCLUDED_FIELDS = os.getenv("RESUME_EXCLUDED_FIELDS", None)
 RESUME_TRANSFORM_FIELDS = os.getenv("RESUME_TRANSFORM_FIELDS", None)
+RESUME_SEARCH_FIELDS = os.getenv("RESUME_SEARCH_FIELDS", None)
 
 if JOB_EXCLUDED_FIELDS is None:
     JOB_EXCLUDED_FIELDS = {
@@ -39,7 +41,8 @@ if JOB_EXCLUDED_FIELDS is None:
     }
 else:
     JOB_EXCLUDED_FIELDS = \
-        {field.strip() for field in JOB_EXCLUDED_FIELDS.split(',') if field.strip() != ''}
+        {field.strip()
+         for field in JOB_EXCLUDED_FIELDS.split(',') if field.strip() != ''}
 
 if JOB_TRANSFORM_FIELDS is None:
     JOB_TRANSFORM_FIELDS = {
@@ -49,7 +52,21 @@ if JOB_TRANSFORM_FIELDS is None:
     }
 else:
     JOB_TRANSFORM_FIELDS = \
-        {field.strip() for field in JOB_TRANSFORM_FIELDS.split(',') if field.strip() != ''}
+        {field.strip()
+         for field in JOB_TRANSFORM_FIELDS.split(',') if field.strip() != ''}
+
+if JOB_SEARCH_FIELDS is None:
+    JOB_SEARCH_FIELDS = {
+        'title',
+        'salary',
+        'tags',
+        # the following are come from JOB_TRANSFORM_FIELDS
+        'extra_tags',
+    }
+else:
+    JOB_SEARCH_FIELDS = \
+        {field.strip()
+         for field in JOB_SEARCH_FIELDS.split(',') if field.strip() != ''}
 
 
 if RESUME_EXCLUDED_FIELDS is None:
@@ -57,7 +74,8 @@ if RESUME_EXCLUDED_FIELDS is None:
     }
 else:
     RESUME_EXCLUDED_FIELDS = \
-        {field.strip() for field in RESUME_EXCLUDED_FIELDS.split(',') if field.strip() != ''}
+        {field.strip()
+         for field in RESUME_EXCLUDED_FIELDS.split(',') if field.strip() != ''}
 
 
 if RESUME_TRANSFORM_FIELDS is None:
@@ -69,4 +87,19 @@ if RESUME_TRANSFORM_FIELDS is None:
     }
 else:
     RESUME_TRANSFORM_FIELDS = \
-        {field.strip() for field in RESUME_TRANSFORM_FIELDS.split(',') if field.strip() != ''}
+        {field.strip()
+         for field in RESUME_TRANSFORM_FIELDS.split(',') if field.strip() != ''}
+
+if RESUME_SEARCH_FIELDS is None:
+    RESUME_SEARCH_FIELDS = {
+        'fullname',
+        'intro',
+        'tags',
+        # the following are come from RESUME_TRANSFORM_FIELDS
+        'name_tags',
+        'title_tags',
+    }
+else:
+    RESUME_SEARCH_FIELDS = \
+        {field.strip()
+         for field in RESUME_SEARCH_FIELDS.split(',') if field.strip() != ''}

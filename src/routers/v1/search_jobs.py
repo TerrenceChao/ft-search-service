@@ -38,12 +38,14 @@ def search_jobs(
     sort_by: SortField = Query(SortField.UPDATED_AT),
     sort_dirction: SortDirection = Query(SortDirection.DESC),
     search_after: str = Query(None),
+    patterns: List[str] = Query([]),
 ):
     query = c.SearchJobListQueryDTO(
         size=size,
         sort_by=sort_by,
         sort_dirction=sort_dirction,
         search_after=search_after,
+        patterns=patterns,
     )
     result = _job_search_service.search(query)
     return res_success(data=result)
