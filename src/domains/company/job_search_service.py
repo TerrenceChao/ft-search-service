@@ -43,18 +43,32 @@ class JobSearchService:
             raise ServerException(msg="create job fail")
 
 
-    def __must_search(self, query: c.SearchJobListQueryDTO):
-        must = {
-            "term": {
-                "enable": True
-            },
-        }
+    def __match_search(self, must: List[Dict[str, Any]], query: c.SearchJobListQueryDTO):
         if query.continent_code is not None and query.continent_code.strip():
-            must["term"]["continent_code"] = query.continent_code
+            must.append({
+                "match": {
+                    "continent_code": query.continent_code,
+                }
+            })
 
         if query.country_code is not None and query.country_code.strip():
-            must["term"]["country_code"] = query.country_code
+            must.append({
+                "match": {
+                    "country_code": query.country_code,
+                }
+            })
 
+        return must
+
+
+    def __should_search(self, must: List[Dict[str, Any]], patterns: List[str]):
+        if len(patterns) > 0:
+            search_patterns = list(map(self.__job_search, patterns))
+            must.append({
+                "bool": {
+                    "should": search_patterns,
+                },
+            })
         return must
 
 
@@ -79,21 +93,21 @@ class JobSearchService:
     def search(self, query: c.SearchJobListQueryDTO):
         req_body = None
         resp = None
-
-        search_patterns = list(map(self.__job_search, query.patterns))
+        must = [
+            {
+                "term": {
+                    "enable": True
+                },
+            },
+        ]
+        must = self.__match_search(must, query)
+        must = self.__should_search(must, query.patterns)
         try:
             req_body = {
                 "size": query.size,
                 "query": {
                     "bool": {
-                        "must": [
-                            self.__must_search(query),
-                            {
-                                "bool": {
-                                    "should": search_patterns,
-                                },
-                            },
-                        ],
+                        "must": must,
                     },
                 },
                 "sort": [
