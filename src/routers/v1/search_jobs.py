@@ -39,6 +39,8 @@ def search_jobs(
     sort_dirction: SortDirection = Query(SortDirection.DESC),
     search_after: str = Query(None),
     patterns: List[str] = Query([]),
+    continent_code: str = Query(None),
+    country_code: str = Query(None),
 ):
     query = c.SearchJobListQueryDTO(
         size=size,
@@ -46,6 +48,8 @@ def search_jobs(
         sort_dirction=sort_dirction,
         search_after=search_after,
         patterns=patterns,
+        continent_code=continent_code,
+        country_code=country_code,
     )
     result = _job_search_service.search(query)
     return res_success(data=result)

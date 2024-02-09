@@ -14,6 +14,8 @@ class SearchJobDTO(BaseModel):
     name: Optional[str] = None  # school/company/organization name
     logo: Optional[str] = None
     title:  Optional[str] = None  # job title
+    continent_code: Optional[str] = None
+    country_code: Optional[str] = None
     location: Optional[str] = None
     salary: Optional[str] = None
     salary_from: Optional[float] = None
@@ -51,6 +53,8 @@ class SearchJobListQueryDTO(BaseModel):
     sort_dirction: SortDirection = SortDirection.DESC
     search_after: Optional[str] = None
     patterns: Optional[List[str]] = []
+    continent_code: Optional[str] = None
+    country_code: Optional[str] = None
 
 
 class SearchJobDetailDTO(company.Job, company.CompanyProfile):
@@ -72,6 +76,8 @@ class SearchJobDetailDTO(company.Job, company.CompanyProfile):
             "name",  # school/company/organization name
             "logo",
             "title",  # job title
+            "continent_code",
+            "country_code",
             "location",
             "salary",
             "salary_from",

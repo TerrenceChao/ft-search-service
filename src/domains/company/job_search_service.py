@@ -43,6 +43,21 @@ class JobSearchService:
             raise ServerException(msg="create job fail")
 
 
+    def __must_search(self, query: c.SearchJobListQueryDTO):
+        must = {
+            "term": {
+                "enable": True
+            },
+        }
+        if query.continent_code is not None and query.continent_code.strip():
+            must["term"]["continent_code"] = query.continent_code
+
+        if query.country_code is not None and query.country_code.strip():
+            must["term"]["country_code"] = query.country_code
+
+        return must
+
+
     def __job_search(self, pattern: str):
         return {
             'multi_match': {
@@ -72,11 +87,7 @@ class JobSearchService:
                 "query": {
                     "bool": {
                         "must": [
-                            {
-                                "term": {
-                                    "enable": True
-                                },
-                            },
+                            self.__must_search(query),
                             {
                                 "bool": {
                                     "should": search_patterns,
