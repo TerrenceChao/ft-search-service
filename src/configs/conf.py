@@ -57,6 +57,7 @@ else:
 
 if JOB_SEARCH_FIELDS is None:
     JOB_SEARCH_FIELDS = {
+        'name',
         'title',
         'salary',
         'tags',
