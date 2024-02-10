@@ -2,14 +2,13 @@ from fastapi import APIRouter
 from ...configs.conf import *
 from ...configs.constants import *
 from ...configs.exceptions import *
-from ...domains.company.job_info_service import JobInfoService
+from ...domains.company.job_info_service import _job_info_service
 from ..res.response import res_success
 import logging as log
 
 
 log.basicConfig(filemode='w', level=log.INFO)
 
-_job_info_service = JobInfoService()
 
 router = APIRouter(
     prefix='/jobs-info',

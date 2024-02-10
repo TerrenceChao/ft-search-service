@@ -7,15 +7,12 @@ import logging as log
 log.basicConfig(filemode='w', level=log.INFO)
 
 
-my_world = awoc.AWOC()
-
-
 class JobInfoService:
-    def __init__(self):
-        pass
+    def __init__(self, world: awoc.AWOC):
+        self.world = world
 
     def __get_continent_vos(self) -> (List[ContinentVO]):
-        continents = my_world.get_continents()
+        continents = self.world.get_continents()
         continent_vos = list(map(
             lambda x: ContinentVO(
                 continent_code=x.get('Continent Code', 'unknown'),
@@ -28,9 +25,9 @@ class JobInfoService:
     def get_continents(self) -> (ContinentListVO):
         continent_vos = self.__get_continent_vos()
         return ContinentListVO(continents=continent_vos)
-    
+
     def __get_country_vos(self, continent_name: str) -> (List[CountryVO]):
-        countries = my_world.get_countries_data_of(continent_name)
+        countries = self.world.get_countries_data_of(continent_name)
         return list(map(
             lambda x: CountryVO(
                 code=x.get('ISO3', 'unknown'),
@@ -66,3 +63,7 @@ class JobInfoService:
             continent_vos
         ))
         return continent_country_vos
+
+
+the_world = awoc.AWOC()
+_job_info_service = JobInfoService(the_world)
