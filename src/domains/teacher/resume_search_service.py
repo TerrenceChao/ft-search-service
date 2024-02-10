@@ -42,18 +42,17 @@ class ResumeSearchService:
             log.error("create_resume, doc: %s, err: %s", doc, str(e))
             raise ServerException(msg="create resume fail")
 
-
-    def __match_search(self, must: List[Dict[str, Any]], query: t.SearchResumeListQueryDTO):
+    def __terms_search(self, must: List[Dict[str, Any]], query: t.SearchResumeListQueryDTO):
         if len(query.tags) > 0:
-            for tag in query.tags:
-                must.append({
-                    "match": {
-                        "tags": tag,
-                    }
-                })
+            query.tags = [tag.strip().lower() for tag in query.tags
+                          if tag != None and tag.strip() != '']
+            must.append({
+                "terms": {
+                    "tags": query.tags,
+                }
+            })
 
         return must
-
 
     def __should_search(self, must: List[Dict[str, Any]], patterns: List[str]):
         if len(patterns) > 0:
@@ -65,7 +64,6 @@ class ResumeSearchService:
             })
         return must
 
-
     def __resume_search(self, pattern: str):
         return {
             'multi_match': {
@@ -74,7 +72,6 @@ class ResumeSearchService:
                 'type': 'phrase',
             }
         }
-
 
     '''
     TODO:
@@ -95,7 +92,7 @@ class ResumeSearchService:
                     },
                 },
             ]
-            must = self.__match_search(must, query)
+            must = self.__terms_search(must, query)
             must = self.__should_search(must, query.patterns)
             req_body = {
                 "size": query.size,
