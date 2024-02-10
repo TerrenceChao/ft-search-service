@@ -9,20 +9,22 @@ import logging as log
 log.basicConfig(filemode='w', level=log.INFO)
 
 
-service = 'es'
-credentials = boto3.Session().get_credentials()
-awsauth = AWS4Auth(
-    credentials.access_key,
-    credentials.secret_key,
-    ES_REGION,
-    service,
-    session_token=credentials.token
-)
-
+if ES_ACCOUNT is None or ES_PASSWORD is None:
+    service = 'es'
+    credentials = boto3.Session().get_credentials()
+    http_auth = AWS4Auth(
+        credentials.access_key,
+        credentials.secret_key,
+        ES_REGION,
+        service,
+        session_token=credentials.token
+    )
+else:
+    http_auth = (ES_ACCOUNT, ES_PASSWORD)
 
 client = OpenSearch(
     hosts=[{"host": ES_HOST, "port": ES_PORT}],
-    http_auth=awsauth,
+    http_auth=http_auth,
     use_ssl=ES_USE_SSL,
     verify_certs=ES_VERIFY_CERTS,
     ssl_assert_hostname=ES_SSL_ASSERT_HOSTNAME,
