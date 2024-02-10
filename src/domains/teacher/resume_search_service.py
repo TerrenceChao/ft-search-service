@@ -43,6 +43,17 @@ class ResumeSearchService:
             raise ServerException(msg="create resume fail")
 
 
+    def __match_search(self, must: List[Dict[str, Any]], query: t.SearchResumeListQueryDTO):
+        if len(query.tags) > 0:
+            for tag in query.tags:
+                must.append({
+                    "match": {
+                        "tags": tag,
+                    }
+                })
+
+        return must
+
 
     def __should_search(self, must: List[Dict[str, Any]], patterns: List[str]):
         if len(patterns) > 0:
@@ -84,6 +95,7 @@ class ResumeSearchService:
                     },
                 },
             ]
+            must = self.__match_search(must, query)
             must = self.__should_search(must, query.patterns)
             req_body = {
                 "size": query.size,
