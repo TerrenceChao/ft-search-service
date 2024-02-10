@@ -39,6 +39,7 @@ def search_resumes(
     sort_dirction: SortDirection = Query(SortDirection.DESC),
     search_after: str = Query(None),
     patterns: List[str] = Query([]),
+    tags: List[str] = Query([]),
 ):
     query = t.SearchResumeListQueryDTO(
         size=size,
@@ -46,6 +47,7 @@ def search_resumes(
         sort_dirction=sort_dirction,
         search_after=search_after,
         patterns=patterns,
+        tags=tags,
     )
     result = _resume_search_service.search(query)
     return res_success(data=result)
