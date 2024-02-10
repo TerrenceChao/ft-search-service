@@ -93,16 +93,16 @@ class JobSearchService:
     def search(self, query: c.SearchJobListQueryDTO):
         req_body = None
         resp = None
-        must = [
-            {
-                "term": {
-                    "enable": True
-                },
-            },
-        ]
-        must = self.__match_search(must, query)
-        must = self.__should_search(must, query.patterns)
         try:
+            must = [
+                {
+                    "term": {
+                        "enable": True
+                    },
+                },
+            ]
+            must = self.__match_search(must, query)
+            must = self.__should_search(must, query.patterns)
             req_body = {
                 "size": query.size,
                 "query": {

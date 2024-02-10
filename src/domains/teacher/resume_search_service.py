@@ -43,6 +43,18 @@ class ResumeSearchService:
             raise ServerException(msg="create resume fail")
 
 
+
+    def __should_search(self, must: List[Dict[str, Any]], patterns: List[str]):
+        if len(patterns) > 0:
+            search_patterns = list(map(self.__resume_search, patterns))
+            must.append({
+                "bool": {
+                    "should": search_patterns,
+                },
+            })
+        return must
+
+
     def __resume_search(self, pattern: str):
         return {
             'multi_match': {
@@ -64,25 +76,20 @@ class ResumeSearchService:
     def search(self, query: t.SearchResumeListQueryDTO):
         req_body = None
         resp = None
-
         try:
-            search_patterns = list(map(self.__resume_search, query.patterns))
+            must = [
+                {
+                    "term": {
+                        "enable": True
+                    },
+                },
+            ]
+            must = self.__should_search(must, query.patterns)
             req_body = {
                 "size": query.size,
                 "query": {
                     "bool": {
-                        "must": [
-                            {
-                                "term": {
-                                    "enable": True
-                                },
-                            },
-                            {
-                                "bool": {
-                                    "should": search_patterns,
-                                },
-                            },
-                        ],
+                        "must": must,
                     },
                 },
                 "sort": [
