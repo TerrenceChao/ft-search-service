@@ -1,6 +1,7 @@
 from typing import List, Any, Dict
 from . import t_value_objects as t
-from ...configs.conf import INDEX_RESUME, ES_INDEX_REFRESH
+from ...configs.conf import \
+    INDEX_RESUME, ES_INDEX_REFRESH, RESUME_SEARCH_FIELDS
 from ...configs.exceptions import *
 from ...infra.utils.time_util import *
 import logging as log
@@ -41,6 +42,40 @@ class ResumeSearchService:
             log.error("create_resume, doc: %s, err: %s", doc, str(e))
             raise ServerException(msg="create resume fail")
 
+
+    def __match_search(self, must: List[Dict[str, Any]], query: t.SearchResumeListQueryDTO):
+        if len(query.tags) > 0:
+            for tag in query.tags:
+                must.append({
+                    "match": {
+                        "tags": tag,
+                    }
+                })
+
+        return must
+
+
+    def __should_search(self, must: List[Dict[str, Any]], patterns: List[str]):
+        if len(patterns) > 0:
+            search_patterns = list(map(self.__resume_search, patterns))
+            must.append({
+                "bool": {
+                    "should": search_patterns,
+                },
+            })
+        return must
+
+
+    def __resume_search(self, pattern: str):
+        return {
+            'multi_match': {
+                'query': pattern,
+                'fields': list(RESUME_SEARCH_FIELDS),
+                'type': 'phrase',
+            }
+        }
+
+
     '''
     TODO:
     - read mapping from cache (or local cache)
@@ -52,15 +87,21 @@ class ResumeSearchService:
     def search(self, query: t.SearchResumeListQueryDTO):
         req_body = None
         resp = None
-
         try:
+            must = [
+                {
+                    "term": {
+                        "enable": True
+                    },
+                },
+            ]
+            must = self.__match_search(must, query)
+            must = self.__should_search(must, query.patterns)
             req_body = {
                 "size": query.size,
                 "query": {
-                    "term": {
-                        "enable": {
-                            "value": True,
-                        },
+                    "bool": {
+                        "must": must,
                     },
                 },
                 "sort": [

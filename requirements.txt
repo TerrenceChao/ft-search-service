@@ -5,3 +5,4 @@ uvicorn==0.17.1
 requests==2.22.0
 opensearch-py==2.1.1
 requests-aws4auth==1.2.0
+a-world-of-countries==1.0.0

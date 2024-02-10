@@ -1,10 +1,12 @@
 import os
 
+
+# elastic search
 ES_REGION = os.getenv("ES_REGION")
-ES_HOST = os.getenv("ES_HOST", "localhost")
+ES_HOST = os.getenv("ES_HOST", None)
 ES_PORT = os.getenv("ES_PORT", "443")
-# ES_ACCOUNT = os.getenv("ES_ACCOUNT", "admin")
-# ES_PASSWORD = os.getenv("ES_PASSWORD", "admin")
+ES_ACCOUNT = os.getenv("ES_ACCOUNT", None)
+ES_PASSWORD = os.getenv("ES_PASSWORD", None)
 ES_USE_SSL = os.getenv("ES_USE_SSL", "True")
 ES_VERIFY_CERTS = os.getenv("ES_VERIFY_CERTS", "True")
 ES_SSL_ASSERT_HOSTNAME = os.getenv("ES_SSL_ASSERT_HOSTNAME", "True")
@@ -27,10 +29,15 @@ ES_INDEX_REFRESH = bool(ES_INDEX_REFRESH)
 MAX_JOB_DICT_DEPTH = int(os.getenv("MAX_JOB_DICT_DEPTH", "2"))
 JOB_EXCLUDED_FIELDS = os.getenv("JOB_EXCLUDED_FIELDS", None)
 JOB_TRANSFORM_FIELDS = os.getenv("JOB_TRANSFORM_FIELDS", None)
+JOB_SEARCH_FIELDS = os.getenv("JOB_SEARCH_FIELDS", None)
 
 # resume
+# resume filter
+RESUME_TAGS = os.getenv("RESUME_TAGS", None)
 RESUME_EXCLUDED_FIELDS = os.getenv("RESUME_EXCLUDED_FIELDS", None)
 RESUME_TRANSFORM_FIELDS = os.getenv("RESUME_TRANSFORM_FIELDS", None)
+RESUME_SEARCH_FIELDS = os.getenv("RESUME_SEARCH_FIELDS", None)
+
 
 if JOB_EXCLUDED_FIELDS is None:
     JOB_EXCLUDED_FIELDS = {
@@ -39,7 +46,8 @@ if JOB_EXCLUDED_FIELDS is None:
     }
 else:
     JOB_EXCLUDED_FIELDS = \
-        {field.strip() for field in JOB_EXCLUDED_FIELDS.split(',') if field.strip() != ''}
+        {field.strip()
+         for field in JOB_EXCLUDED_FIELDS.split(',') if field.strip() != ''}
 
 if JOB_TRANSFORM_FIELDS is None:
     JOB_TRANSFORM_FIELDS = {
@@ -49,7 +57,42 @@ if JOB_TRANSFORM_FIELDS is None:
     }
 else:
     JOB_TRANSFORM_FIELDS = \
-        {field.strip() for field in JOB_TRANSFORM_FIELDS.split(',') if field.strip() != ''}
+        {field.strip()
+         for field in JOB_TRANSFORM_FIELDS.split(',') if field.strip() != ''}
+
+if JOB_SEARCH_FIELDS is None:
+    JOB_SEARCH_FIELDS = {
+        'name',
+        'title',
+        'salary',
+        'tags',
+        # the following are come from JOB_TRANSFORM_FIELDS
+        'extra_tags',
+    }
+else:
+    JOB_SEARCH_FIELDS = \
+        {field.strip()
+         for field in JOB_SEARCH_FIELDS.split(',') if field.strip() != ''}
+
+
+DEFAULT_RESUME_TAGS = {
+    'IELTS',
+    'TEFL certificate',
+    'kid\'s courses',
+    'kid\'s phonics',
+    'systemic learning',
+    'TOEFL ITP',
+    'GEPT high-intermediate',
+    'business english',
+    'interviews',
+}
+if RESUME_TAGS is None:
+    RESUME_TAGS = DEFAULT_RESUME_TAGS
+else:
+    RESUME_TAGS = \
+        {tag.strip()
+         for tag in RESUME_TAGS.split(',') if tag.strip() != ''}
+    RESUME_TAGS |= DEFAULT_RESUME_TAGS
 
 
 if RESUME_EXCLUDED_FIELDS is None:
@@ -57,7 +100,8 @@ if RESUME_EXCLUDED_FIELDS is None:
     }
 else:
     RESUME_EXCLUDED_FIELDS = \
-        {field.strip() for field in RESUME_EXCLUDED_FIELDS.split(',') if field.strip() != ''}
+        {field.strip()
+         for field in RESUME_EXCLUDED_FIELDS.split(',') if field.strip() != ''}
 
 
 if RESUME_TRANSFORM_FIELDS is None:
@@ -69,4 +113,19 @@ if RESUME_TRANSFORM_FIELDS is None:
     }
 else:
     RESUME_TRANSFORM_FIELDS = \
-        {field.strip() for field in RESUME_TRANSFORM_FIELDS.split(',') if field.strip() != ''}
+        {field.strip()
+         for field in RESUME_TRANSFORM_FIELDS.split(',') if field.strip() != ''}
+
+if RESUME_SEARCH_FIELDS is None:
+    RESUME_SEARCH_FIELDS = {
+        'fullname',
+        'intro',
+        'tags',
+        # the following are come from RESUME_TRANSFORM_FIELDS
+        'name_tags',
+        'title_tags',
+    }
+else:
+    RESUME_SEARCH_FIELDS = \
+        {field.strip()
+         for field in RESUME_SEARCH_FIELDS.split(',') if field.strip() != ''}

@@ -1,6 +1,7 @@
 from typing import List, Any, Dict
 from . import c_value_objects as c
-from ...configs.conf import INDEX_JOB, ES_INDEX_REFRESH
+from ...configs.conf import \
+    INDEX_JOB, ES_INDEX_REFRESH, JOB_SEARCH_FIELDS
 from ...configs.exceptions import *
 from ...infra.utils.time_util import *
 import logging as log
@@ -41,6 +42,46 @@ class JobSearchService:
             log.error("create_job, doc: %s, err: %s", doc, str(e))
             raise ServerException(msg="create job fail")
 
+
+    def __match_search(self, must: List[Dict[str, Any]], query: c.SearchJobListQueryDTO):
+        if query.continent_code is not None and query.continent_code.strip():
+            must.append({
+                "match": {
+                    "continent_code": query.continent_code,
+                }
+            })
+
+        if query.country_code is not None and query.country_code.strip():
+            must.append({
+                "match": {
+                    "country_code": query.country_code,
+                }
+            })
+
+        return must
+
+
+    def __should_search(self, must: List[Dict[str, Any]], patterns: List[str]):
+        if len(patterns) > 0:
+            search_patterns = list(map(self.__job_search, patterns))
+            must.append({
+                "bool": {
+                    "should": search_patterns,
+                },
+            })
+        return must
+
+
+    def __job_search(self, pattern: str):
+        return {
+            'multi_match': {
+                'query': pattern,
+                'fields': list(JOB_SEARCH_FIELDS),
+                'type': 'phrase',
+            }
+        }
+
+
     '''
     TODO:
     - read mapping from cache (or local cache)
@@ -52,15 +93,21 @@ class JobSearchService:
     def search(self, query: c.SearchJobListQueryDTO):
         req_body = None
         resp = None
-
         try:
+            must = [
+                {
+                    "term": {
+                        "enable": True
+                    },
+                },
+            ]
+            must = self.__match_search(must, query)
+            must = self.__should_search(must, query.patterns)
             req_body = {
                 "size": query.size,
                 "query": {
-                    "term": {
-                        "enable": {
-                            "value": True,
-                        },
+                    "bool": {
+                        "must": must,
                     },
                 },
                 "sort": [
