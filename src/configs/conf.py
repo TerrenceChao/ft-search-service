@@ -1,5 +1,7 @@
 import os
 
+
+# elastic search
 ES_REGION = os.getenv("ES_REGION")
 ES_HOST = os.getenv("ES_HOST", None)
 ES_PORT = os.getenv("ES_PORT", "443")
@@ -30,9 +32,12 @@ JOB_TRANSFORM_FIELDS = os.getenv("JOB_TRANSFORM_FIELDS", None)
 JOB_SEARCH_FIELDS = os.getenv("JOB_SEARCH_FIELDS", None)
 
 # resume
+# resume filter
+RESUME_TAGS = os.getenv("RESUME_TAGS", None)
 RESUME_EXCLUDED_FIELDS = os.getenv("RESUME_EXCLUDED_FIELDS", None)
 RESUME_TRANSFORM_FIELDS = os.getenv("RESUME_TRANSFORM_FIELDS", None)
 RESUME_SEARCH_FIELDS = os.getenv("RESUME_SEARCH_FIELDS", None)
+
 
 if JOB_EXCLUDED_FIELDS is None:
     JOB_EXCLUDED_FIELDS = {
@@ -68,6 +73,26 @@ else:
     JOB_SEARCH_FIELDS = \
         {field.strip()
          for field in JOB_SEARCH_FIELDS.split(',') if field.strip() != ''}
+
+
+DEFAULT_RESUME_TAGS = {
+    'IELTS',
+    'TEFL certificate',
+    'kid\'s courses',
+    'kid\'s phonics',
+    'systemic learning',
+    'TOEFL ITP',
+    'GEPT high-intermediate',
+    'business english',
+    'interviews',
+}
+if RESUME_TAGS is None:
+    RESUME_TAGS = DEFAULT_RESUME_TAGS
+else:
+    RESUME_TAGS = \
+        {tag.strip()
+         for tag in RESUME_TAGS.split(',') if tag.strip() != ''}
+    RESUME_TAGS |= DEFAULT_RESUME_TAGS
 
 
 if RESUME_EXCLUDED_FIELDS is None:

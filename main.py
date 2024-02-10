@@ -4,7 +4,7 @@ from fastapi import FastAPI, Request, APIRouter
 from fastapi.responses import JSONResponse
 from src.routers.v1 import \
     search_resumes, search_jobs,\
-    job_info
+    resume_info, job_info
 from src.configs import exceptions
 
 
@@ -34,6 +34,7 @@ exceptions.include_app(app)
 router_v1 = APIRouter(prefix="/search/api/v1")
 router_v1.include_router(search_resumes.router)
 router_v1.include_router(search_jobs.router)
+router_v1.include_router(resume_info.router)
 router_v1.include_router(job_info.router)
 
 
